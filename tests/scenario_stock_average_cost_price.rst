@@ -156,6 +156,10 @@ Add two shipment lines of 1 unit of product with price 50::
     ...     move.currency = currency
     >>> shipment_in.save()
 
+Set the shipment state to waiting::
+
+    >>> ShipmentIn.receive([shipment_in.id], config.context)
+
 Check Cost Price is 75::
 
     >>> product.reload()
@@ -187,7 +191,7 @@ Add two shipment lines of 1 unit of product with price 50::
     ...     move.currency = currency
     >>> shipment_in_r.save()
 
-Set the shipment state to waiting::
+Set the shipment state to waiting, assign and done::
 
     >>> ShipmentInReturn.wait([shipment_in_r.id], config.context)
     >>> ShipmentInReturn.assign_try([shipment_in_r.id], config.context)
@@ -195,6 +199,42 @@ Set the shipment state to waiting::
     >>> ShipmentInReturn.done([shipment_in_r.id], config.context)
 
 Check Cost Price is 100::
+
+    >>> product.reload()
+    >>> product.template.cost_price
+    Decimal('100.0000')
+
+Create Shipment In Return::
+
+    >>> shipment_in_r = ShipmentInReturn()
+    >>> shipment_in_r.planned_date = today
+    >>> shipment_in_r.from_location = storage_loc
+    >>> shipment_in_r.to_location = supplier_loc
+    >>> shipment_in_r.company = company
+    >>> shipment_in_r.save()
+
+Add a shipment line with 2 units with price 300::
+
+    >>> move = StockMove()
+    >>> move.product = product
+    >>> move.uom = unit
+    >>> move.quantity = 2
+    >>> move.from_location = storage_loc
+    >>> move.to_location = supplier_loc
+    >>> move.company = company
+    >>> move.unit_price = Decimal('300')
+    >>> move.currency = currency
+    >>> move.shipment = shipment_in_r
+    >>> move.save()
+
+Set the shipment state to waiting, assign and done::
+
+    >>> ShipmentInReturn.wait([shipment_in_r.id], config.context)
+    >>> ShipmentInReturn.assign_try([shipment_in_r.id], config.context)
+    True
+    >>> ShipmentInReturn.done([shipment_in_r.id], config.context)
+
+Check Cost Price is 100 (because product stock is zero)::
 
     >>> product.reload()
     >>> product.template.cost_price
