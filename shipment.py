@@ -82,7 +82,8 @@ class ShipmentIn:
                     cost_prices.extend(([p], {
                         'cost_price': new_cost_price,
                         }))
-            Product.write(*cost_prices)
+            if cost_prices:
+                Product.write(*cost_prices)
         else:
             digits = ProductTemplate.cost_price.digits
             for p in products:
@@ -94,7 +95,8 @@ class ShipmentIn:
                     cost_prices.extend(([p.template], {
                         'cost_price': new_cost_price,
                         }))
-            ProductTemplate.write(*cost_prices)
+            if cost_prices:
+                ProductTemplate.write(*cost_prices)
 
 
 class ShipmentInReturn:
@@ -169,7 +171,8 @@ class ShipmentInReturn:
                     cost_prices.extend(([p], {
                         'cost_price': new_cost_price,
                         }))
-            Product.write(*cost_prices)
+            if cost_prices:
+                Product.write(*cost_prices)
         else:
             digits = ProductTemplate.cost_price.digits
             for p in products:
@@ -181,4 +184,5 @@ class ShipmentInReturn:
                     cost_prices.extend(([p.template], {
                         'cost_price': new_cost_price,
                         }))
-            ProductTemplate.write(*cost_prices)
+            if cost_prices:
+                ProductTemplate.write(*cost_prices)
