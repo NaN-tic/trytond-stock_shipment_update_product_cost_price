@@ -29,15 +29,12 @@ class ShipmentIn:
         Uom = pool.get('product.uom')
         Product = pool.get('product.product')
         ProductTemplate = pool.get('product.template')
-        Location = pool.get('stock.location')
         Currency = pool.get('currency.currency')
         Date = pool.get('ir.date')
 
+        warehouses = [s.warehouse for s in shipments]
         context = {}
-        locations = Location.search([
-                ('type', '=', 'warehouse'),
-                ])
-        context['locations'] = [l.id for l in locations]
+        context['locations'] = [w.storage_location.id for w in warehouses]
         context['stock_date_end'] = Date.today()
         products = list(set([m.product for s in shipments for m in
             s.incoming_moves if m.product.cost_price_method == 'average']))
