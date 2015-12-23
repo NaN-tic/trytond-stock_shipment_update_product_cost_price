@@ -29,13 +29,15 @@ class ShipmentIn:
         Uom = pool.get('product.uom')
         Product = pool.get('product.product')
         ProductTemplate = pool.get('product.template')
+        Location = pool.get('stock.location')
         Currency = pool.get('currency.currency')
         Date = pool.get('ir.date')
 
-        # TODO calculate qty product for each warehouse and group shipments
-        warehouses = set(s.warehouse for s in shipments)
+        warehouses = Location.search([
+                ('type', '=', 'warehouse'),
+                ])
         context = {}
-        context['locations'] = list(set(w.storage_location.id for w in warehouses))
+        context['locations'] = [w.storage_location.id for w in warehouses]
         context['stock_date_end'] = Date.today()
         products = list(set([m.product for s in shipments for m in
             s.incoming_moves if m.product.cost_price_method == 'average']))
