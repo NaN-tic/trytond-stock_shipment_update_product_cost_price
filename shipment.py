@@ -96,7 +96,8 @@ class ShipmentIn:
                         'cost_price': new_cost_price,
                         }))
             if cost_prices:
-                ProductTemplate.write(*cost_prices)
+                with Transaction().set_user(0, set_context=True):
+                    ProductTemplate.write(*cost_prices)
 
 
 class ShipmentInReturn:
