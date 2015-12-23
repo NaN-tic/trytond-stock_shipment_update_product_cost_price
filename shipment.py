@@ -32,9 +32,10 @@ class ShipmentIn:
         Currency = pool.get('currency.currency')
         Date = pool.get('ir.date')
 
-        warehouses = [s.warehouse for s in shipments]
+        # TODO calculate qty product for each warehouse and group shipments
+        warehouses = set(s.warehouse for s in shipments)
         context = {}
-        context['locations'] = [w.storage_location.id for w in warehouses]
+        context['locations'] = list(set(w.storage_location.id for w in warehouses))
         context['stock_date_end'] = Date.today()
         products = list(set([m.product for s in shipments for m in
             s.incoming_moves if m.product.cost_price_method == 'average']))
