@@ -35,7 +35,7 @@ class ShipmentIn:
 
         context = {}
         locations = Location.search([
-                ('type', '=', 'storage'),
+                ('type', '=', 'warehouse'),
                 ])
         context['locations'] = [l.id for l in locations]
         context['stock_date_end'] = Date.today()
