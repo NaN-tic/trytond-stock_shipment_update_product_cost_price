@@ -6,10 +6,9 @@ from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
 __all__ = ['Move']
 
-__metaclass__ = PoolMeta
-
 
 class Move:
+    __metaclass__ = PoolMeta
     __name__ = 'stock.move'
 
     def _update_product_cost_price(self, direction):

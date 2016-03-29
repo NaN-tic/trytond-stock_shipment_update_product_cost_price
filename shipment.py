@@ -8,10 +8,9 @@ from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 __all__ = ['ShipmentIn', 'ShipmentInReturn']
 
-__metaclass__ = PoolMeta
-
 
 class ShipmentIn:
+    __metaclass__ = PoolMeta
     __name__ = 'stock.shipment.in'
 
     @classmethod
@@ -101,6 +100,7 @@ class ShipmentIn:
 
 
 class ShipmentInReturn:
+    __metaclass__ = PoolMeta
     __name__ = 'stock.shipment.in.return'
 
     @classmethod
