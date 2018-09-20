@@ -4,11 +4,11 @@
 # copyright notices and license terms.
 from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
+
 __all__ = ['Move']
 
 
-class Move:
-    __metaclass__ = PoolMeta
+class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
     def _update_product_cost_price(self, direction):

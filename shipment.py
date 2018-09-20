@@ -1,16 +1,14 @@
-# This file is part of the stock_shipment_update_product_cost_price module for
-# Tryton.
+# This file is part of the stock_shipment_update_product_cost_price module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
 from decimal import Decimal
-
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
+
 __all__ = ['ShipmentIn', 'ShipmentInReturn']
 
 
-class ShipmentIn:
-    __metaclass__ = PoolMeta
+class ShipmentIn(metaclass=PoolMeta):
     __name__ = 'stock.shipment.in'
 
     @classmethod
@@ -99,8 +97,7 @@ class ShipmentIn:
                     ProductTemplate.write(*cost_prices)
 
 
-class ShipmentInReturn:
-    __metaclass__ = PoolMeta
+class ShipmentInReturn(metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.return'
 
     @classmethod
