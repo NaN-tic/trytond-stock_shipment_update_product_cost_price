@@ -12,6 +12,8 @@ Imports::
     >>> from dateutil.relativedelta import relativedelta
     >>> from decimal import Decimal
     >>> from proteus import config, Model, Wizard
+    >>> from trytond.modules.company.tests.tools import create_company, \
+    ...     get_company
     >>> today = datetime.date.today()
 
 Create database::
@@ -28,29 +30,8 @@ Install stock Module::
 
 Create company::
 
-    >>> Currency = Model.get('currency.currency')
-    >>> CurrencyRate = Model.get('currency.currency.rate')
-    >>> Company = Model.get('company.company')
-    >>> Party = Model.get('party.party')
-    >>> company_config = Wizard('company.company.config')
-    >>> company_config.execute('company')
-    >>> company = company_config.form
-    >>> party = Party(name='Dunder Mifflin')
-    >>> party.save()
-    >>> company.party = party
-    >>> currencies = Currency.find([('code', '=', 'USD')])
-    >>> if not currencies:
-    ...     currency = Currency(name='US Dollar', symbol='$', code='USD',
-    ...         rounding=Decimal('0.01'), mon_grouping='[3, 3, 0]',
-    ...         mon_decimal_point='.')
-    ...     currency.save()
-    ...     CurrencyRate(date=today + relativedelta(month=1, day=1),
-    ...         rate=Decimal('1.0'), currency=currency).save()
-    ... else:
-    ...     currency, = currencies
-    >>> company.currency = currency
-    >>> company_config.execute('add')
-    >>> company, = Company.find()
+    >>> _ = create_company()
+    >>> company = get_company()
 
 Reload the context::
 
@@ -100,10 +81,10 @@ Create Shipment In::
 
     >>> ShipmentIn = Model.get('stock.shipment.in')
     >>> shipment_in = ShipmentIn()
+    >>> shipment_in.supplier = supplier
     >>> shipment_in.planned_date = today
     >>> shipment_in.supplier = supplier
     >>> shipment_in.warehouse = warehouse_loc
-    >>> shipment_in.company = company
     >>> shipment_in.save()
 
 Add a shipment line with 2 units with price 100::
@@ -115,9 +96,7 @@ Add a shipment line with 2 units with price 100::
     >>> move.quantity = 2
     >>> move.from_location = supplier_loc
     >>> move.to_location = input_loc
-    >>> move.company = company
     >>> move.unit_price = Decimal('100')
-    >>> move.currency = currency
     >>> move.shipment = shipment_in
     >>> move.save()
 
@@ -136,10 +115,10 @@ Create Shipment In::
 
     >>> ShipmentIn = Model.get('stock.shipment.in')
     >>> shipment_in = ShipmentIn()
+    >>> shipment_in.supplier = supplier
     >>> shipment_in.planned_date = today
     >>> shipment_in.supplier = supplier
     >>> shipment_in.warehouse = warehouse_loc
-    >>> shipment_in.company = company
 
 Add two shipment lines of 1 unit of product with price 50::
 
@@ -151,9 +130,7 @@ Add two shipment lines of 1 unit of product with price 50::
     ...     move.quantity = 1
     ...     move.from_location = supplier_loc
     ...     move.to_location = input_loc
-    ...     move.company = company
     ...     move.unit_price = Decimal('50')
-    ...     move.currency = currency
     >>> shipment_in.save()
 
 Set the shipment state to waiting::
@@ -171,10 +148,10 @@ Create Shipment In Return::
 
     >>> ShipmentInReturn = Model.get('stock.shipment.in.return')
     >>> shipment_in_r = ShipmentInReturn()
+    >>> shipment_in_r.supplier = supplier
     >>> shipment_in_r.planned_date = today
     >>> shipment_in_r.from_location = storage_loc
     >>> shipment_in_r.to_location = supplier_loc
-    >>> shipment_in_r.company = company
 
 Add two shipment lines of 1 unit of product with price 50::
 
@@ -186,9 +163,7 @@ Add two shipment lines of 1 unit of product with price 50::
     ...     move.quantity = 1
     ...     move.from_location = storage_loc
     ...     move.to_location = supplier_loc
-    ...     move.company = company
     ...     move.unit_price = Decimal('50')
-    ...     move.currency = currency
     >>> shipment_in_r.save()
 
 Set the shipment state to waiting, assign and done::
@@ -207,10 +182,10 @@ Check Cost Price is 100::
 Create Shipment In Return::
 
     >>> shipment_in_r = ShipmentInReturn()
+    >>> shipment_in_r.supplier = supplier
     >>> shipment_in_r.planned_date = today
     >>> shipment_in_r.from_location = storage_loc
     >>> shipment_in_r.to_location = supplier_loc
-    >>> shipment_in_r.company = company
     >>> shipment_in_r.save()
 
 Add a shipment line with 2 units with price 300::
@@ -221,9 +196,7 @@ Add a shipment line with 2 units with price 300::
     >>> move.quantity = 2
     >>> move.from_location = storage_loc
     >>> move.to_location = supplier_loc
-    >>> move.company = company
     >>> move.unit_price = Decimal('300')
-    >>> move.currency = currency
     >>> move.shipment = shipment_in_r
     >>> move.save()
 
