@@ -33,11 +33,11 @@ class ShipmentIn:
         Currency = pool.get('currency.currency')
         Date = pool.get('ir.date')
 
-        warehouses = Location.search([
-                ('type', '=', 'warehouse'),
-                ])
+        locations = Location.search([('type', '=', 'storage')])
+
         context = {}
-        context['locations'] = [w.storage_location.id for w in warehouses]
+        context['with_childs'] = False
+        context['locations'] = [l.id for l in locations]
         context['stock_date_end'] = Date.today()
         products = list(set([m.product for s in shipments for m in
             s.incoming_moves if m.product.cost_price_method == 'average']))
@@ -122,10 +122,10 @@ class ShipmentInReturn:
         Currency = pool.get('currency.currency')
         Date = pool.get('ir.date')
 
+        locations = Location.search([('type', '=', 'storage')])
+
         context = {}
-        locations = Location.search([
-                ('type', '=', 'storage'),
-                ])
+        context['with_childs'] = False
         context['locations'] = [l.id for l in locations]
         context['stock_date_end'] = Date.today()
         products = list(set([m.product for s in shipments for m in
